@@ -34,6 +34,6 @@ jobs:
         #automatic_release_tag: "latest"
         automatic_release_tag: "aws_${{ steps.version.outputs.version }}"
         prerelease: true
-        title: "Uber jar build"
+        title: "AWS uber jar ${{ steps.version.outputs.version }}"
         files: ./build/libs/aws-msk-iam-auth-2.2.0-uber.jar
   
