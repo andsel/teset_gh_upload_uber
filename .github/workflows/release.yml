@@ -23,14 +23,13 @@ jobs:
     - name: Create Uber jar
       id: create_uber
       run: ./gradlew :aws:shadowJar 
-    - name: version
-      run: echo "::set-output name=version::$(./gradlew :aws:printVersion)"
+    - name: Retrieve uber jar version
+      run: echo "version=$(./gradlew -q :aws:printVersion)" >> $GITHUB_OUTPUT
       id: version   
     - name: Create release and attach uber jar
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        #automatic_release_tag: "latest"
         automatic_release_tag: "aws_${{ steps.version.outputs.version }}"
         prerelease: true
         title: "AWS uber jar ${{ steps.version.outputs.version }}"
