@@ -1,13 +1,21 @@
 name: Create uber-jar and publish on Github Packages
+run-name: "Create uber-jar and publish on Github Packages for (${{ inputs.cloud_provider }})"
+
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      cloud_provider:
+        description: 'Cloud provider to create the AIM uber jar'
+        required: true
+        type: choice
+        default: 'aws'
+        options:
+        - aws
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    # This is required to create the release
     permissions:
       contents: write
     steps:
