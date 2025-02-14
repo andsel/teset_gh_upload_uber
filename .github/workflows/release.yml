@@ -20,10 +20,34 @@ jobs:
         java-version: 17
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
-#    - name: Build with Gradle
-#      run: ./gradlew shadowJar
-    - name: Publish shadowed uber jar
-      run: ./gradlew publish --info
+    - name: Build with Gradle
+      id: create_uber
+      run: ./gradlew shadowJar
+#    - name: Publish shadowed uber jar
+#      run: ./gradlew publish --info
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+    - name: version
+      run: echo "::set-output name=version::$(./gradlew printVersion)"
+      id: version
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: false
+        prerelease: false
+        release_name: aws_${{ steps.version.outputs.version }}
+        tag_name: ${{ github.ref }}
+        #body_path: CHANGELOG.md
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+        GITHUB_TOKEN: ${{ github.token }}  
+    - name: upload luber jar
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build/libs/aws-msk-iam-auth-2.2.0-uber.jar
+#        asset_name: azblogfilter.linux-amd64.tar.gz
+#        asset_content_type: application/gzip    
   
