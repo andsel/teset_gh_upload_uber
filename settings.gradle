@@ -6,3 +6,4 @@
  */
 
 rootProject.name = 'teset_gh_upload_uber'
+include('aws')
